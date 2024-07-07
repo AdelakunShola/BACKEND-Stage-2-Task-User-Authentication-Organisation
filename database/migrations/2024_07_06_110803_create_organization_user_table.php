@@ -11,14 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('organization_user', function (Blueprint $table) {
-            $table->id();
-            $table->string('user_id');
-            $table->string('organization_id');
-            $table->foreign('user_id')->references('userId')->on('users')->onDelete('cascade');
-            $table->foreign('organization_id')->references('orgId')->on('organizations')->onDelete('cascade');
-            $table->timestamps();
-        });
+       // Ensure the userId column in users table is of type string
+       Schema::table('users', function (Blueprint $table) {
+        $table->string('userId')->change();
+    });
+
+    Schema::create('organization_user', function (Blueprint $table) {
+        $table->id();
+        $table->string('user_id');
+        $table->string('organization_id');
+        $table->timestamps();
+
+        $table->foreign('user_id')->references('userId')->on('users')->onDelete('cascade');
+        $table->foreign('organization_id')->references('orgId')->on('organizations')->onDelete('cascade');
+
+        // Add indexes for better performance
+        $table->index('user_id');
+        $table->index('organization_id');
+    });
     }
 
     /**
