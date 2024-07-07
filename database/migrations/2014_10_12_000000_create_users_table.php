@@ -12,14 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->string('userId')->primary()->unique(); // Unique user ID as a string
-            $table->string('firstName')->nullable(false);
-            $table->string('lastName')->nullable(false); 
-            $table->string('email')->unique()->nullable(false); 
-            $table->string('password')->nullable(false);
-            $table->string('phone')->nullable(); 
-            $table->rememberToken(); // Remember token for authentication
-            $table->timestamps(); // Timestamps for created_at and updated_at
+            $table->id();
+            $table->uuid('userId')->unique()->nullable();
+            $table->string('firstName');
+            $table->string('lastName');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->string('phone');
+            $table->rememberToken();
+            $table->timestamps();
         });
     }
 
@@ -31,3 +33,5 @@ return new class extends Migration
         Schema::dropIfExists('users');
     }
 };
+
+

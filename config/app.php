@@ -182,6 +182,8 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
+        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+
         /*
          * Package Service Providers...
          */
@@ -210,7 +212,9 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
-        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'Jwt' => Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        'JwtFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'JwtAuth' => Tymon\JWTAuth\Facades\JwtAuth::class,
     ])->toArray(),
 
 ];

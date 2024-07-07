@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Models\Organization;
+
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -18,6 +21,17 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $guarded = [];
+
+
+
+// In User.php
+
+public function organizations()
+    {
+        return $this->belongsToMany(Organization::class, 'organization_user', 'user_id', 'organization_id');
+    }
+
+   
 
     /**
      * The attributes that should be hidden for serialization.
@@ -38,31 +52,18 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
     ];
 
-    /**
-     * Define the organisations relationship.
-     */
-    public function organisations()
-    {
-        return $this->belongsToMany(Organisation::class, 'organisation_user', 'userId', 'orgId');
-    }
 
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
+    // Add these methods to your User model
     public function getJWTIdentifier()
     {
         return $this->getKey();
     }
 
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
     public function getJWTCustomClaims()
     {
         return [];
     }
+
+
+    
 }
