@@ -20,10 +20,12 @@ return new class extends Migration
         $table->id();
         $table->uuid('user_id');
         $table->uuid('organization_id');
-        $table->foreignUuid('user_id')->references('userId')->on('users')->onDelete('cascade');
-        $table->foreignUuid('organization_id')->references('orgId')->on('organizations')->onDelete('cascade');
+        $table->foreign('user_id')->references('userId')->on('users')->onDelete('cascade');
+        $table->foreign('organization_id')->references('orgId')->on('organizations')->onDelete('cascade');
         $table->timestamps();
     });
+    
+
     }
 
     /**

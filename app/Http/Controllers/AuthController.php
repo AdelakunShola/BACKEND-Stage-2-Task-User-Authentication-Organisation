@@ -19,7 +19,7 @@ class AuthController extends Controller
     
     
 
-public function register(Request $request)
+    public function register(Request $request)
 {
     // Validation rules
     $validator = Validator::make($request->all(), [
@@ -137,14 +137,6 @@ public function register(Request $request)
         ], 200, [], JSON_PRETTY_PRINT);
     }
 }
-
-
-
-
-
-
-
-
 
 
 
