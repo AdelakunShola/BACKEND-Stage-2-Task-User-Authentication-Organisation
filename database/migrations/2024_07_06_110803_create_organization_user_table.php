@@ -18,16 +18,11 @@ return new class extends Migration
 
     Schema::create('organization_user', function (Blueprint $table) {
         $table->id();
-        $table->string('user_id')->unique();
-        $table->string('organization_id')->unique();
+        $table->uuid('user_id');
+        $table->uuid('organization_id');
+        $table->foreignUuid('user_id')->references('userId')->on('users')->onDelete('cascade');
+        $table->foreignUuid('organization_id')->references('orgId')->on('organizations')->onDelete('cascade');
         $table->timestamps();
-
-        $table->foreign('user_id')->references('userId')->on('users')->onDelete('cascade');
-        $table->foreign('organization_id')->references('orgId')->on('organizations')->onDelete('cascade');
-
-        // Add indexes for better performance
-        $table->index('user_id');
-        $table->index('organization_id');
     });
     }
 
