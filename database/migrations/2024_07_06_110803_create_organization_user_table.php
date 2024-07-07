@@ -4,35 +4,38 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateOrganizationUserTable extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
-       // Ensure the userId column in users table is of type string
-       Schema::table('users', function (Blueprint $table) {
-        $table->string('userId')->change();
-    });
+        Schema::create('organization_user', function (Blueprint $table) {
+            $table->id();
+            $table->uuid('user_id');
+            $table->uuid('organization_id');
+            
 
-    Schema::create('organization_user', function (Blueprint $table) {
-        $table->id();
-        $table->uuid('user_id');
-        $table->uuid('organization_id');
-        $table->foreign('user_id')->references('userId')->on('users')->onDelete('cascade');
-        $table->foreign('organization_id')->references('orgId')->on('organizations')->onDelete('cascade');
-        $table->timestamps();
-    });
-    
+            // Foreign keys
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
+            $table->timestamps();
 
+            // Composite unique key to ensure no duplicate entries
+            $table->unique(['user_id', 'organization_id']);
+        });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('organization_user');
     }
-};
+}

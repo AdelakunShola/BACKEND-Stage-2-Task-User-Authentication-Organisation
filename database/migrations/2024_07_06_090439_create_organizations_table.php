@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('organizations', function (Blueprint $table) {
             $table->id();
-            $table->string('orgId')->unique();
+            $table->uuid('orgId');
             $table->string('name')->nullable(false);
             $table->string('description')->nullable();
             $table->timestamps();
