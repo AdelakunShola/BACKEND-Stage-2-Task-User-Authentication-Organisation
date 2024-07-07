@@ -18,8 +18,8 @@ return new class extends Migration
 
     Schema::create('organization_user', function (Blueprint $table) {
         $table->id();
-        $table->string('user_id');
-        $table->string('organization_id');
+        $table->string('user_id')->unique();
+        $table->string('organization_id')->unique();
         $table->timestamps();
 
         $table->foreign('user_id')->references('userId')->on('users')->onDelete('cascade');
