@@ -19,7 +19,7 @@ class AuthController extends Controller
     
     
 
-    public function register(Request $request)
+public function register(Request $request)
 {
     // Validation rules
     $validator = Validator::make($request->all(), [
@@ -97,7 +97,7 @@ class AuthController extends Controller
             'user_id' => $user->userId
         ]);
 
-        // Generate an access token (assuming you're using Laravel Passport or Sanctum)
+        // Generate an access token 
         $accessToken = $user->createToken('authToken')->plainTextToken;
 
         // Return the successful registration response
@@ -125,18 +125,26 @@ class AuthController extends Controller
             'message' => 'Registration unsuccessful',
             'statusCode' => 400,
             'error' => $e->getMessage()
-        ], 200, [], JSON_PRETTY_PRINT);
+        ], 400, [], JSON_PRETTY_PRINT);
     } catch (\Exception $e) {
         Log::error('General Exception', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
 
         return response()->json([
             'status' => 'Bad request',
-            'message' => 'Registration unsuccessful due to a server error. Please try again later.',
-            'statusCode' => 400,
+            'message' => 'Registration unsuccessful.',
+            'statusCode' => 500,
             'error' => $e->getMessage()
-        ], 200, [], JSON_PRETTY_PRINT);
+        ], 400, [], JSON_PRETTY_PRINT);
     }
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -225,26 +233,8 @@ public function getUser(Request $request, $id)
         // Fetch the user record based on the provided $id
         $user = User::findOrFail($id);
 
-        // Retrieve organization IDs where the authenticated user belongs to
-        $orgIds = DB::table('organization_user')
-            ->where('user_id', $authenticatedUser->userId)  // Use the correct column name
-            ->pluck('organization_id')  // Use the correct column name
-            ->toArray();
-
-        if (empty($orgIds)) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'No organizations found for authenticated user',
-            ], 403);
-        }
-
-        // Check if the requested user belongs to any of the same organizations
-        $sharedOrganizations = DB::table('organization_user')
-            ->where('user_id', $user->userId)  // Use the correct column name
-            ->whereIn('organization_id', $orgIds)  // Use the correct column name
-            ->exists();
-
-        if (!$sharedOrganizations && $authenticatedUser->userId !== $user->userId) {
+        // Check if the authenticated user can access the requested user's record
+        if ($authenticatedUser->userId !== $user->userId) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized',
@@ -267,16 +257,17 @@ public function getUser(Request $request, $id)
     } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
         return response()->json([
             'status' => 'error',
-            'message' => 'User not found',
-        ], 404, [], JSON_PRETTY_PRINT);
+            'message' => 'Unauthorized',
+        ], 403, [], JSON_PRETTY_PRINT);
     } catch (\Exception $e) {
         return response()->json([
             'status' => 'error',
-            'message' => 'An error occurred',
+            'message' => 'Unauthorized',
             'error' => $e->getMessage(),
-        ], 500, [], JSON_PRETTY_PRINT);
+        ], 403, [], JSON_PRETTY_PRINT);
     }
 }
+
 
 
 
@@ -506,5 +497,13 @@ public function getOrganisation($id)
         }
     }
 }
+
+
+
+
+
+
+
+
 
 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->uuid('userId');
+            $table->uuid('userId')->unique()->nullable();
             $table->string('firstName');
             $table->string('lastName');
             $table->string('email')->unique();
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-    } 
+    }
 
     /**
      * Reverse the migrations.
