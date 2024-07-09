@@ -119,7 +119,7 @@ public function register(Request $request)
 
     } catch (\Illuminate\Database\QueryException $e) {
         Log::error('Database Query Exception', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-
+ 
         return response()->json([
             'status' => 'Bad request',
             'message' => 'Registration unsuccessful',
